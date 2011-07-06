@@ -1,0 +1,52 @@
+NAME
+    HTTP::Daemon::UNIX - HTTP::Daemon over Unix sockets
+
+VERSION
+    version 0.01
+
+SYNOPSIS
+     use HTTP::Daemon::UNIX;
+
+     # arguments will be passed to IO::Socket::UNIX, but Listen=>1 and
+     # Type=>SOCK_STREAM will be added by default. also, HTTP::Daemon::UNIX will try
+     # to delete stale socket first, for convenience.
+
+     my $d = HTTP::Daemon::UNIX->new(Local => "/path/to/unix.sock");
+
+     # will print something like: "http:path/to/unix.sock"
+     print "Please contact me at: <URL:", $d->url, ">\n";
+
+     # after that, use like you would use HTTP::Daemon
+     while (my $c = $d->accept) {
+         while (my $r = $c->get_request) {
+             if ($r->method eq 'GET' and $r->uri->path eq "/xyzzy") {
+                 # remember, this is *not* recommended practice :-)
+                 $c->send_file_response("/etc/passwd");
+             } else {
+                 $c->send_error(RC_FORBIDDEN);
+             }
+         }
+         $c->close;
+         undef($c);
+     }
+
+DESCRIPTION
+    This is a quick hack to enable HTTP::Daemon to serve requests over Unix
+    sockets, by mixing in IO::Socket::UNIX and HTTP::Daemon as parents to
+    HTTP::Daemon::UNIX and overriding IO::Socket::INET-related stuffs.
+
+    Basic stuffs seem to be working, but this module has not been tested
+    extensively, so beware that things might blow up in your face.
+
+SEE ALSO
+    HTTP::Daemon
+
+AUTHOR
+    Steven Haryanto <stevenharyanto@gmail.com>
+
+COPYRIGHT AND LICENSE
+    This software is copyright (c) 2011 by Steven Haryanto.
+
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
+
