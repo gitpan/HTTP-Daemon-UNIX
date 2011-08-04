@@ -1,5 +1,11 @@
 Revision history for HTTP-Daemon-UNIX
 
+0.02    2011-08-04
+
+        No functional changes. Add client-side example and mention
+        LWP::Protocol::http::SocketUnixAlt.
+
+
 0.01    2011-07-06
 
         First release.

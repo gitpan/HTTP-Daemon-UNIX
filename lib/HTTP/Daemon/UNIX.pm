@@ -1,6 +1,6 @@
 package HTTP::Daemon::UNIX;
 BEGIN {
-  $HTTP::Daemon::UNIX::VERSION = '0.01';
+  $HTTP::Daemon::UNIX::VERSION = '0.02';
 }
 
 use 5.010;
@@ -53,8 +53,8 @@ sub url {
     $hostpath =~ s!^/!!;
     my $url = $self->_default_scheme . ":" . $hostpath;
 
-    # note: my patched LWP::Protocol::http::SocketUnix requires this syntax
-    # ("//" separates the Unix socket path and URI):
+    # note: my LWP::Protocol::http::SocketUnixAlt requires this syntax ("//"
+    # separates the Unix socket path and URI):
     # http:abs/path/to/unix.sock//uri/path
 }
 
@@ -69,7 +69,7 @@ HTTP::Daemon::UNIX - HTTP::Daemon over Unix sockets
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 SYNOPSIS
 
@@ -78,7 +78,6 @@ version 0.01
  # arguments will be passed to IO::Socket::UNIX, but Listen=>1 and
  # Type=>SOCK_STREAM will be added by default. also, HTTP::Daemon::UNIX will try
  # to delete stale socket first, for convenience.
-
  my $d = HTTP::Daemon::UNIX->new(Local => "/path/to/unix.sock");
 
  # will print something like: "http:path/to/unix.sock"
@@ -98,6 +97,17 @@ version 0.01
      undef($c);
  }
 
+ # client side code, using LWP::Protocol::http::SocketUnixAlt
+ use LWP::Protocol::http::SocketUnixAlt;
+ use LWP::UserAgent;
+ use HTTP::Request::Common;
+
+ my $ua = LWP::UserAgent->new;
+ my $orig_imp = LWP::Protocol::implementor("http");
+ LWP::Protocol::implementor(http => 'LWP::Protocol::http::SocketUnixAlt');
+ my $resp = $ua->request(GET "http:path/to/unix.sock//uri/path");
+ LWP::Protocol::implementor(http => $orig_imp);
+
 =head1 DESCRIPTION
 
 This is a quick hack to enable L<HTTP::Daemon> to serve requests over Unix
@@ -110,6 +120,8 @@ extensively, so beware that things might blow up in your face.
 =head1 SEE ALSO
 
 L<HTTP::Daemon>
+
+L<LWP::Protocol::http::SocketUnixAlt>
 
 =head1 AUTHOR
 
