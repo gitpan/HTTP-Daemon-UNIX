@@ -1,15 +1,15 @@
 package HTTP::Daemon::UNIX;
-BEGIN {
-  $HTTP::Daemon::UNIX::VERSION = '0.02';
-}
 
 use 5.010;
 use strict;
 use warnings;
 
-use IO::Socket::UNIX;
 use HTTP::Daemon;
+use IO::Handle::Record; # for peercred()
+use IO::Socket::UNIX;
 our @ISA = qw(HTTP::Daemon IO::Socket::UNIX);
+
+our $VERSION = '0.03'; # VERSION
 
 sub new {
     my ($class, %args) = @_;
@@ -69,7 +69,7 @@ HTTP::Daemon::UNIX - HTTP::Daemon over Unix sockets
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 SYNOPSIS
 

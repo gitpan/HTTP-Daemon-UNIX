@@ -15,8 +15,9 @@ meta-spec:
 name: HTTP-Daemon-UNIX
 requires:
   HTTP::Daemon: 0
+  IO::Handle::Record: 0
   perl: 5.010000
 resources:
   homepage: http://search.cpan.org/dist/HTTP-Daemon-UNIX/
   repository: http://github.com/sharyanto/perl-HTTP-Daemon-UNIX
-version: 0.02
+version: 0.03

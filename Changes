@@ -1,5 +1,10 @@
 Revision history for HTTP-Daemon-UNIX
 
+0.03    2011-08-20
+
+        Uses IO::Handle::Record for peercred().
+
+
 0.02    2011-08-04
 
         No functional changes. Add client-side example and mention

@@ -17,13 +17,14 @@ my %module_build_args = (
     'Steven Haryanto <stevenharyanto@gmail.com>'
   ],
   'dist_name' => 'HTTP-Daemon-UNIX',
-  'dist_version' => '0.02',
+  'dist_version' => '0.03',
   'license' => 'perl',
   'module_name' => 'HTTP::Daemon::UNIX',
   'recommends' => {},
   'recursive_test_files' => 1,
   'requires' => {
     'HTTP::Daemon' => '0',
+    'IO::Handle::Record' => '0',
     'perl' => '5.010000'
   },
   'script_files' => []
