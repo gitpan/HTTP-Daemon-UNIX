@@ -7,9 +7,11 @@ use warnings;
 use HTTP::Daemon;
 use IO::Handle::Record; # for peercred()
 use IO::Socket::UNIX;
+use POSIX qw(locale_h);
+
 our @ISA = qw(HTTP::Daemon IO::Socket::UNIX);
 
-our $VERSION = '0.03'; # VERSION
+our $VERSION = '0.04'; # VERSION
 
 sub new {
     my ($class, %args) = @_;
@@ -19,6 +21,8 @@ sub new {
 
     if ($args{Local}) {
         my $path = $args{Local};
+        my $old_locale = setlocale(LC_ALL);
+        setlocale(LC_ALL, "C"); # so that error messages are in English
 
         # probe the Unix socket first, delete if stale
         $sock = IO::Socket::UNIX->new(
@@ -28,15 +32,14 @@ sub new {
         if ($sock) {
             die "Some process is already listening on $path, aborting";
         } elsif ($err =~ /^connect: permission denied/i) {
-            # XXX language dependant
             die "Cannot access $path, aborting";
         } elsif (1) { #$err =~ /^connect: connection refused/i) {
-            # XXX language dependant
             unlink $path;
         } elsif ($err !~ /^connect: no such file/i) {
-            # XXX language dependant
             die "Cannot bind to $path: $err";
         }
+
+        setlocale(LC_ALL, $old_locale);
     }
 
     $args{Listen} //= 1;
@@ -65,11 +68,11 @@ sub url {
 
 =head1 NAME
 
-HTTP::Daemon::UNIX - HTTP::Daemon over Unix sockets
+HTTP::Daemon::UNIX
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 SYNOPSIS
 
@@ -129,7 +132,7 @@ Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by Steven Haryanto.
+This software is copyright (c) 2012 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
