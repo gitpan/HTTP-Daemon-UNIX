@@ -1,21 +1,30 @@
 Revision history for HTTP-Daemon-UNIX
 
-0.04    2012-05-23
+0.05    2014-07-06 (SHARYANTO)
 
-        No functional changes. Make sure connect error messages are in English.
+        - No functional changes.
 
-
-0.03    2011-08-20
-
-        Uses IO::Handle::Record for peercred().
+        - Extract socket creation routine to SHARYANTO::IO::Socket::UNIX::Util.
 
 
-0.02    2011-08-04
+0.04    2012-05-23 (SHARYANTO)
 
-        No functional changes. Add client-side example and mention
-        LWP::Protocol::http::SocketUnixAlt.
+        - No functional changes.
+
+        - Make sure connect error messages are in English.
 
 
-0.01    2011-07-06
+0.03    2011-08-20 (SHARYANTO)
 
-        First release.
+        - Uses IO::Handle::Record for peercred().
+
+
+0.02    2011-08-04 (SHARYANTO)
+
+        - No functional changes. Add client-side example and mention
+          LWP::Protocol::http::SocketUnixAlt.
+
+
+0.01    2011-07-06 (SHARYANTO)
+
+        - First release.

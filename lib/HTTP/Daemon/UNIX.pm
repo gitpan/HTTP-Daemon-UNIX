@@ -1,52 +1,25 @@
 package HTTP::Daemon::UNIX;
 
-use 5.010;
+use 5.010001;
 use strict;
 use warnings;
 
 use HTTP::Daemon;
 use IO::Handle::Record; # for peercred()
-use IO::Socket::UNIX;
-use POSIX qw(locale_h);
+use SHARYANTO::IO::Socket::UNIX::Util qw(create_unix_socket);
 
 our @ISA = qw(HTTP::Daemon IO::Socket::UNIX);
 
-our $VERSION = '0.04'; # VERSION
+our $DATE = '2014-07-06'; # DATE
+our $VERSION = '0.05'; # VERSION
 
 sub new {
     my ($class, %args) = @_;
-    my $sock;
 
     # XXX normalize arg case first
 
-    if ($args{Local}) {
-        my $path = $args{Local};
-        my $old_locale = setlocale(LC_ALL);
-        setlocale(LC_ALL, "C"); # so that error messages are in English
-
-        # probe the Unix socket first, delete if stale
-        $sock = IO::Socket::UNIX->new(
-            Type=>SOCK_STREAM,
-            Peer=>$path);
-        my $err = $@ unless $sock;
-        if ($sock) {
-            die "Some process is already listening on $path, aborting";
-        } elsif ($err =~ /^connect: permission denied/i) {
-            die "Cannot access $path, aborting";
-        } elsif (1) { #$err =~ /^connect: connection refused/i) {
-            unlink $path;
-        } elsif ($err !~ /^connect: no such file/i) {
-            die "Cannot bind to $path: $err";
-        }
-
-        setlocale(LC_ALL, $old_locale);
-    }
-
-    $args{Listen} //= 1;
-    $args{Type}   //= SOCK_STREAM;
-
-    $sock = IO::Socket::UNIX->new(%args);
-    die "Can't bind to Unix socket: $@" unless $sock;
+    my $sock = SHARYANTO::IO::Socket::UNIX::Util::create_unix_socket(
+        $args{Local});
     bless $sock, $class;
 }
 
@@ -62,17 +35,21 @@ sub url {
 }
 
 1;
+# ABSTRACT: HTTP::Daemon over Unix sockets
 
+__END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
-HTTP::Daemon::UNIX
+HTTP::Daemon::UNIX - HTTP::Daemon over Unix sockets
 
 =head1 VERSION
 
-version 0.04
+This document describes version 0.05 of HTTP::Daemon::UNIX (from Perl distribution HTTP-Daemon-UNIX), released on 2014-07-06.
 
 =head1 SYNOPSIS
 
@@ -126,20 +103,31 @@ L<HTTP::Daemon>
 
 L<LWP::Protocol::http::SocketUnixAlt>
 
+=head1 HOMEPAGE
+
+Please visit the project's homepage at L<https://metacpan.org/release/HTTP-Daemon-UNIX>.
+
+=head1 SOURCE
+
+Source repository is at L<https://github.com/sharyanto/perl-HTTP-Daemon-UNIX>.
+
+=head1 BUGS
+
+Please report any bugs or feature requests on the bugtracker website L<https://rt.cpan.org/Public/Dist/Display.html?Name=HTTP-Daemon-UNIX>
+
+When submitting a bug or request, please include a test-file or a
+patch to an existing test-file that illustrates the bug or desired
+feature.
+
 =head1 AUTHOR
 
 Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Steven Haryanto.
+This software is copyright (c) 2014 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
-
-__END__
-# ABSTRACT: HTTP::Daemon over Unix sockets
-
