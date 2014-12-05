@@ -3,7 +3,7 @@ NAME
 
 VERSION
     This document describes version 0.05 of HTTP::Daemon::UNIX (from Perl
-    distribution HTTP-Daemon-UNIX), released on 2014-07-06.
+    distribution HTTP-Daemon-UNIX), released on 2014-12-05.
 
 SYNOPSIS
      use HTTP::Daemon::UNIX;
@@ -60,7 +60,7 @@ HOMEPAGE
 
 SOURCE
     Source repository is at
-    <https://github.com/sharyanto/perl-HTTP-Daemon-UNIX>.
+    <https://github.com/perlancar/perl-HTTP-Daemon-UNIX>.
 
 BUGS
     Please report any bugs or feature requests on the bugtracker website
@@ -70,10 +70,10 @@ BUGS
     to an existing test-file that illustrates the bug or desired feature.
 
 AUTHOR
-    Steven Haryanto <stevenharyanto@gmail.com>
+    perlancar <perlancar@cpan.org>
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2014 by Steven Haryanto.
+    This software is copyright (c) 2014 by perlancar@cpan.org.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.
